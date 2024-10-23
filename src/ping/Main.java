@@ -8,6 +8,6 @@ public class Main
     public static void main(String[] args) throws InterruptedException
     {
         PingBot breaker = new PingBot(Options.Builder.of(args));
-        //breaker.launch();
+        breaker.launch();
     }
 }
