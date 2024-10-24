@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="DosScriptMC:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/DosScriptMC_jar</output-path>
+    <root id="archive" name="DosScriptMC.jar">
+      <element id="module-output" name="DosScriptMC" />
+    </root>
+  </artifact>
+</component>

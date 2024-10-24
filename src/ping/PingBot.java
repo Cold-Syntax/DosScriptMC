@@ -18,7 +18,7 @@ public class PingBot
     {
         if(!this.options.isOption("host"))
         {
-            System.out.println("\n Example: java -jar MinePing.jar host-<IP> port-<PORT> threads-<THREADS>");
+            System.out.println("\n Example: java -jar DosScriptMC.jar host-<IP> port-<PORT> threads-<THREADS>");
             return;
         }
 
