@@ -44,7 +44,7 @@ public class Run
         JoinMode.LOOP_AMOUNT = this.options.getOption("l", 700);
         boolean print = this.options.getOption("debug", false);
         boolean socksV4 = this.options.getOption("socks---", true);
-        JoinMode.Flood flood = this.flood.findById(String.valueOf(floodName));
+        JoinMode.Flooder flood = this.flood.findById(String.valueOf(floodName));
 
         if(flood == null)
         {
