@@ -2,10 +2,9 @@ package ping;
 
 import java.io.DataOutputStream;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.Socket;
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
@@ -90,8 +89,8 @@ public class Run
                             Socket socket;
                             String newServerName = finalServerName;
                             int newServerPort = finalPort;
-                            java.net.Proxy proxy = lastProxy = this.proxies.nextProxy();
-                            Socket secondSocket = socket = proxy.type() == java.net.Proxy.Type.HTTP ? new SocketHttp(newServerName, newServerPort, proxy.address(), timeout) : new Socket((proxy);
+                            Proxy proxy = lastProxy = this.proxies.nextProxy();
+                            Socket socket2 = socket = proxy.type() == Proxy.Type.HTTP ? new SocketHttp(newServerName, newServerPort, proxy.address(), timeout) : new Socket(proxy);
 
                             if(!(socket instanceof SocketHttp))
                             {
